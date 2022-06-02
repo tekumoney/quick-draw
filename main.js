@@ -1,7 +1,3 @@
-random_number=Math.floor((Math.random()*quick_draw_data_set.length)+1);
-sketch = quick_draw_data_set[random_number];
-console.log(sketch);
-document.getElementById("sketch_to_be_drawn").innerHTML = "Sketch to be drawn - " + sketch;
 timer_counter="0";
 timer_check="";
 drawn_sketch="";
@@ -11,7 +7,11 @@ quick_draw_data_set=["aircraft carrier","airplane","alarm clock","ambulance","an
 
 updateCanvas()
 {
-    
+    Background("white")
+    random_number=Math.floor((Math.random()*quick_draw_data_set.length)+1);
+    sketch = quick_draw_data_set[random_number];
+    console.log(sketch);
+    document.getElementById("sketch_to_be_drawn").innerHTML = "Sketch to be drawn - " + sketch;
 }
 
 function setup() {
@@ -34,6 +34,12 @@ function preload()
 
 function draw()
 {
+    if(drawn_sketch == sketch) {
+        answer_holder = "set";
+        score2 = score+1;
+        document.getElementById("score").innerHTML = "Score: " + score2;
+    }
+    check_sketch();
     strokeWeight(9);
     stroke(0);
     if (mouseIsPressed) {
@@ -57,4 +63,19 @@ function gotResults(error, results)
 
     utterThis = new SpeechSynthesisUtterance(results[0].label);
     synth.speak(utterThis);
+}
+
+function check_sketch()
+{
+    timer_counter = timer_counter+1;
+    document.getElementById("timer").innerHTML = "Timer: " + timer_counter;
+    if(timer_counter>400){
+        timer_counter = 0;
+        timer_check = "completed";
+    }
+    if(answer_holder == "set"){
+        timer_check = "";
+        answer_holder = "";
+        updateCanvas();
+    }
 }
